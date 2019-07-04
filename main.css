@@ -1,0 +1,36 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 26, 2019, 6:44:57 PM
+    Author     : Abdul Rehman
+*/
+
+.navbar-default {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+}
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+    color: #fff !important;
+    background-color: transparent !important;
+}
+.navbar-default .navbar-nav>li>a {
+    color: #fff !important;
+}
+.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
+    color: #fff !important;
+    background-color: transparent;
+}
+.navbar-default .navbar-brand {
+    color: #fff !important;
+}
+.btn-default, .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+    color: #fff !important;
+    background-color: #4caf50 !important;
+    border-color: #4caf50 !important;
+}
+.js-errors {
+    display: none ;
+}

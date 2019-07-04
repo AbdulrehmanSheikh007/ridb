@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+
+        <div class="container">
+
+            <!-- 1. Include action buttons play/stop -->
+            <button id="btn-start-recording">Start Recording</button>
+            <button id="btn-stop-recording" disabled="disabled">Stop Recording</button>
+
+            <!--
+                2. Include a video element that will display the current video stream
+                and as well to show the recorded video at the end.
+            -->
+            <hr>
+            <video id="my-preview" controls autoplay></video>
+
+        </div>
+
+    </body>
+</html>
+
+<!-- 3. Include the RecordRTC library and the latest adapter -->
+<script src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script>
+    // Store a reference of the preview video element and a global reference to the mediaRecorder instance
+    var video = document.getElementById('my-preview');
+    var mediaRecorder;
+
+    // When the user clicks on start video recording
+    document.getElementById('btn-start-recording').addEventListener("click", function () {
+
+        // Request access to the media devices
+        navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true
+        }).then(function (stream) {
+            // Display a live preview on the video element of the page
+            setSrcObject(stream, video);
+
+            // Start to display the preview on the video element
+            // and mute the video to disable the echo issue !
+            video.play();
+            video.muted = true;
+
+            // Initialize the mediaRecorder
+            mediaRecorder = new RecordRTCPromisesHandler(stream, {
+                mimeType: 'video/webm',
+                bitsPerSecond: 128000
+            });
+
+            // Start recording the video
+            mediaRecorder.startRecording().then(function () {
+                console.info('Recording video ...');
+                console.info('Setup StopRecording Code');
+                stopRec(mediaRecorder, stream); 
+            }).catch(function (error) {
+                console.error('Cannot start video recording: ', error);
+            });
+
+            // release stream on stopRecording
+            mediaRecorder.stream = stream;
+
+            // Enable stop recording button
+            document.getElementById('btn-stop-recording').disabled = false;
+        }).catch(function (error) {
+            console.error("Cannot access media devices: ", error);
+        });
+    }, false);
+
+    function stopRec(mediaRecorder,stream) {
+        // When the user clicks on Stop video recording
+        document.getElementById('btn-stop-recording').addEventListener("click", function () {
+            
+            mediaRecorder.stopRecording().then(function (stream) {
+                console.info('stopRecording success');
+                // Stop the device streaming
+                mediaRecorder.stream.stop();
+                // Retrieve recorded video as blob and display in the preview element
+                var videoBlob = mediaRecorder.getBlob();
+                var fileName = getFileName('webm');
+                var fileObject = new File([videoBlob], fileName, {
+                    type: 'video/webm'
+                });
+                
+                
+            }).catch(function (error) {
+                console.error('stopRecording failure', error);
+            });
+        }, false);
+    }
+
+
+    function getFileName(fileExtension) {
+        return 'video' + '-' + getRandomString() + '.' + fileExtension;
+    }
+
+    function getRandomString() {
+        if (window.crypto && window.crypto.getRandomValues && navigator.userAgent.indexOf('Safari') === -1) {
+            var a = window.crypto.getRandomValues(new Uint32Array(3)),
+                    token = '';
+            for (var i = 0, l = a.length; i < l; i++) {
+                token += a[i].toString(36);
+            }
+            return token;
+        } else {
+            return (Math.random() * new Date().getTime()).toString(36).replace(/\./g, '');
+        }
+    }
+
+</script>
