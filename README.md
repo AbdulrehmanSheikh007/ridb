@@ -13,13 +13,18 @@ The Recreation Information Database (RIDB) provides data resources to citizens, 
 4. run XAMPP or WAMPP whatever suits you.
 5. Hit the url http://localhost/ridb
 
+
 Username / Email: sheikhabdulrehman8@gmail.com
+
 Password: 123456
+
 
 A tiny custom admin panel to support core PHP with latest Bootstrap!
 
 Regards,
+
 Abdulrehman Sheikh
+
 Sr. Software Engineer (PHP Dept.)
 
 
